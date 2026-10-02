@@ -4,21 +4,40 @@ An AI teaching workspace that helps private-school teachers prepare lessons, gen
 
 > **AI proposes → Teacher reviews → Teacher decides → System records.**
 
-**Live demo:** [TeachKit Live Demo](https://teach-kit.vercel.app/)
+**Live demo:** [TeachKit Live Demo](https://ai-native-frontend-teachkit-app.vercel.app/)
 **Author:** Akanimo Umoh
 **Programme:** Flexisaf Internship, Advanced Frontend (Fully AI-Native Track)
 
 ## Status
 
-Phase 1, Week 1: product strategy and frontend architecture. This repo currently contains planning documents; the app is built up module by module.
+Phase 1, Week 1: product strategy and frontend architecture. This repo currently contains planning documents; the app is built up phase by phase.
 
-## Documents
+The application will live in [`teachkit-app/`](./teachkit-app). Each phase's documents are in their own folder.
+
+## Repository structure
+
+```
+ai-native-frontend/
+├── README.md                      # project overview (this file)
+├── phase-1-product-strategy/      # Phase 1 documents
+└── teachkit-app/                  # the application (built from Weeks 2-3)
+```
+
+## Phases
+
+| Phase | Folder | Focus |
+|---|---|---|
+| Phase 1: AI-Native Product Strategy & Frontend Architecture | [phase-1-product-strategy](./phase-1-product-strategy) | Product brief, system diagram, risk register, README, live URL |
+
+More phases are added to this table as they are completed.
+
+## Phase 1 documents
 
 | Document | Description |
 |---|---|
-| [Product brief](./docs/product-brief.md) | Problem, users, jobs-to-be-done, AI use cases, flows, acceptance criteria, privacy, state decisions |
-| [System diagram](./docs/system-diagram.md) | Browser / server / model / external boundaries, sequence and approval-loop diagrams |
-| [Risk register](./docs/risk-register.md) | Risks, likelihood, impact and mitigations |
+| [Product brief](./phase-1-product-strategy/01-product-brief.md) | Problem, users, jobs-to-be-done, AI use cases, flows, acceptance criteria, privacy, state decisions |
+| [System diagram](./phase-1-product-strategy/02-system-boundary-diagram.md) | Browser / server / model / external boundaries, sequence and approval-loop diagrams |
+| [Risk register](./phase-1-product-strategy/03-risk-register.md) | Risks, likelihood, impact and mitigations |
 
 ## What TeachKit does
 
@@ -35,20 +54,25 @@ Every AI step has a manual fallback, and nothing is saved or shared without expl
 - **Model:** drafts lessons, quiz questions and feedback suggestions
 - **Data store:** teachers, classes, lessons, quizzes, preferences
 
-See the [system diagram](./docs/system-diagram.md) for details.
+See the [system diagram](./phase-1-product-strategy/02-system-boundary-diagram.md) for details.
 
 ## Tech stack
 
 - Next.js (App Router), TypeScript, Tailwind CSS
 - Vercel AI SDK
-- Anthropic (Claude) as the default provider; **swappable**, because the AI SDK keeps frontend code the same across providers
 - Deployed on Vercel
+
+### AI platform and model
+
+TeachKit is currently planned against **Anthropic (Claude)**. **The provider and model are subject to change.** The choice is swappable because all model calls go through the Vercel AI SDK on the server, so the frontend code stays the same whichever provider or model is used. Switching is a configuration change, not a UI rewrite.
 
 ## Getting started
 
+_Coming in Phase 1, Weeks 2-3, when the application is scaffolded._
+
 ```bash
-git clone <repo-url>
-cd teachkit
+git clone https://github.com/Akanimo-Umoh/ai-native-frontend.git
+cd ai-native-frontend/teachkit-app
 npm install
 cp .env.example .env.local   # add your provider key
 npm run dev
@@ -62,14 +86,7 @@ ANTHROPIC_API_KEY=
 
 ## Deployment
 
-The repo is connected to Vercel. Every push to `main` deploys automatically.
-
-## Roadmap
-
-| Module | Focus |
-|---|---|
-| Phase 1 | Product brief, system diagram, risk register, README, live URL |
-| Next modules | AI SDK integration, streaming lesson generation, structured quiz output, persistence, teacher preferences, tool use, evals |
+The repo is connected to Vercel with `teachkit-app` as the root directory. Every push to `main` deploys automatically.
 
 ## Principles
 
