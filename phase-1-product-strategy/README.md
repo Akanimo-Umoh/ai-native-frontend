@@ -3,7 +3,7 @@
 **Product:** TeachKit, an AI teaching workspace for private-school teachers
 **Track:** Advanced Frontend, Fully AI-Native
 **Author:** Akanimo Umoh
-**Live URL:** _add Vercel URL here_
+**Live URL:** [TeachKit Live Demo](https://ai-native-frontend-teachkit-app.vercel.app/)
 
 ## What this submission is
 
