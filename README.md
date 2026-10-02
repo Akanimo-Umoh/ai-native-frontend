@@ -12,22 +12,23 @@ An AI teaching workspace that helps private-school teachers prepare lessons, gen
 
 Phase 1, Week 1: product strategy and frontend architecture. This repo currently contains planning documents; the app is built up phase by phase.
 
-The application will live in [`teachkit-app/`](./teachkit-app). Each phase's documents are in their own folder.
+The application will live in [`teachkit-app/`](./teachkit-app). Each phase's documents are in its own folder under [`submissions/`](./submissions).
 
 ## Repository structure
 
 ```
 ai-native-frontend/
-├── README.md                      # project overview (this file)
-├── phase-1-product-strategy/      # Phase 1 documents
-└── teachkit-app/                  # the application (built from Weeks 2-3)
+├── README.md                          # project overview (this file)
+├── submissions/                       # one folder per phase submission
+│   └── phase-1-product-strategy/      # Phase 1 documents
+└── teachkit-app/                      # the application (built from Weeks 2-3)
 ```
 
 ## Phases
 
 | Phase | Folder | Focus |
 |---|---|---|
-| Phase 1: AI-Native Product Strategy & Frontend Architecture | [phase-1-product-strategy](./phase-1-product-strategy) | Product brief, system diagram, risk register, README, live URL |
+| Phase 1: AI-Native Product Strategy & Frontend Architecture | [phase-1-product-strategy](./submissions/phase-1-product-strategy) | Product brief, system diagram, risk register, README, live URL |
 
 More phases are added to this table as they are completed.
 
@@ -35,9 +36,9 @@ More phases are added to this table as they are completed.
 
 | Document | Description |
 |---|---|
-| [Product brief](./phase-1-product-strategy/01-product-brief.md) | Problem, users, jobs-to-be-done, AI use cases, flows, acceptance criteria, privacy, state decisions |
-| [System diagram](./phase-1-product-strategy/02-system-boundary-diagram.md) | Browser / server / model / external boundaries, sequence and approval-loop diagrams |
-| [Risk register](./phase-1-product-strategy/03-risk-register.md) | Risks, likelihood, impact and mitigations |
+| [Product brief](./submissions/phase-1-product-strategy/01-product-brief.md) | Problem, users, jobs-to-be-done, AI use cases, flows, acceptance criteria, privacy, state decisions |
+| [System diagram](./submissions/phase-1-product-strategy/02-system-boundary-diagram.md) | Browser / server / model / external boundaries, sequence and approval-loop diagrams |
+| [Risk register](./submissions/phase-1-product-strategy/03-risk-register.md) | Risks, likelihood, impact and mitigations |
 
 ## What TeachKit does
 
@@ -54,7 +55,7 @@ Every AI step has a manual fallback, and nothing is saved or shared without expl
 - **Model:** drafts lessons, quiz questions and feedback suggestions
 - **Data store:** teachers, classes, lessons, quizzes, preferences
 
-See the [system diagram](./phase-1-product-strategy/02-system-boundary-diagram.md) for details.
+See the [system diagram](./submissions/phase-1-product-strategy/02-system-boundary-diagram.md) for details.
 
 ## Tech stack
 
