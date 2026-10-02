@@ -7,7 +7,6 @@ This diagram shows what runs in the **browser**, the **server**, the **model** a
 ```mermaid
 flowchart LR
   subgraph B["BROWSER (untrusted)"]
-    direction TB
     B1["Request form (class, subject, topic)"]
     B2["Streaming draft renderer"]
     B3["Inline editor + per-section regenerate"]
@@ -17,7 +16,6 @@ flowchart LR
   end
 
   subgraph S["NEXT.JS SERVER (trusted, on Vercel)"]
-    direction TB
     S1["Auth + session check"]
     S2["Input validation + rate limiting"]
     S3["Prompt builder (system prompt + preferences)"]
@@ -27,7 +25,7 @@ flowchart LR
   end
 
   subgraph M["MODEL LAYER"]
-    M1["LLM (Anthropic by default, swappable)"]
+    M1["LLM (Anthropic by default; provider and model subject to change)"]
   end
 
   subgraph D["DATA + EXTERNAL"]
@@ -52,7 +50,7 @@ flowchart LR
 
 | Boundary | Allowed to cross | Never crosses |
 |---|---|---|
-| Browser → Server | Teacher's request, edits, approve/reject actions | Nothing secret originates in the browser |
+| Browser → Server | Teacher's request, edits, approve/reject actions | Provider API keys or any other server secret |
 | Server → Browser | Validated, structured, teacher-scoped output; session cookie (HttpOnly) | API keys, system prompts, raw model responses, other teachers' data |
 | Server → Model | Constructed prompt, teacher preferences, class level and topic | Student names or identifiers, credentials of the user |
 | Model → Server | Streamed text / structured JSON | Nothing is trusted until validated |
@@ -70,17 +68,18 @@ sequenceDiagram
   B->>S: POST /api/lessons/generate
   S->>S: Verify session, validate input, rate limit
   S->>M: Prompt (system rules + preferences + request)
-  M-->>S: Streamed draft
-  S->>S: Validate against lesson schema
-  S-->>B: Stream validated sections
-  B-->>T: Show "AI draft" for review
-  T->>B: Edit sections / regenerate a section
-  T->>B: Approve
-  B->>S: POST /api/lessons (approved content)
-  S->>S: Save to database
-  S-->>B: Saved confirmation
 
-  alt Model error or timeout
+  alt Draft generated successfully
+    M-->>S: Streamed draft
+    S->>S: Validate against lesson schema
+    S-->>B: Stream validated sections
+    B-->>T: Show "AI draft" for review
+    T->>B: Edit sections / regenerate a section
+    T->>B: Approve
+    B->>S: POST /api/lessons (approved content)
+    S->>S: Save to database
+    S-->>B: Saved confirmation
+  else Model error or timeout
     S-->>B: Recoverable error + partial draft
     B-->>T: Retry / Write manually / Save partial
   else Output fails schema validation
@@ -100,7 +99,7 @@ stateDiagram-v2
   Failed --> Generating: retry
   Failed --> ManualEdit: write manually
   Draft --> ManualEdit: edit
-  ManualEdit --> Draft: continue editing
+  ManualEdit --> Draft: save edits
   Draft --> Generating: regenerate
   Draft --> Approved: teacher approves
   Draft --> Discarded: teacher rejects
@@ -108,4 +107,4 @@ stateDiagram-v2
   Discarded --> [*]
 ```
 
-Only the **Approved** state is written to the lesson/quiz library. Nothing moves from AI output to saved or shared content without the teacher's explicit action.
+Drafts may be autosaved so no work is lost, but only **Approved** content enters the lesson/quiz library. Nothing moves from AI output to saved or shared content without the teacher's explicit action.
