@@ -67,11 +67,11 @@ Grading is deliberately scoped as AI-assisted feedback, never AI grading. The AI
 
 - **Framework:** Next.js (App Router) + TypeScript + Tailwind CSS, deployed on Vercel.
 - **AI layer:** Vercel AI SDK, so the frontend code stays the same whatever the provider is.
-- **Provider:** build against **Anthropic (Claude)** through the Messages API. **This is swappable:** because all model calls go through the AI SDK on the server, switching to OpenAI (Responses API) or another provider is a configuration change, not a frontend rewrite.
+- **Provider:** build against **Anthropic (Claude)** through the Messages API. **This choice, including the specific model, is subject to change.** Because all model calls go through the Vercel AI SDK on the server, switching to OpenAI (Responses API) or another provider is a configuration change, not a frontend rewrite.
 
 ## 9. Frontend / backend / model / data boundaries
 
-Full diagram in [`system-diagram.md`](./system-diagram.md). Summary:
+Full diagram in [`system-diagram.md`](./02-system-boundary-diagram.md). Summary:
 
 | Layer | Owns |
 |---|---|
