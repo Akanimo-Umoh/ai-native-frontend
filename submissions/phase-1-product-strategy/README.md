@@ -15,17 +15,17 @@ TeachKit helps teachers draft lesson plans and quizzes with AI, then review, edi
 
 | Deliverable | File | What it covers |
 |---|---|---|
-| Product brief | [product-brief.md](./product-brief.md) | Problem, target users, jobs-to-be-done, core AI use cases, user flows (including review/approval and fallback states), acceptance criteria, privacy risks, early state-management decisions, AI platform choice, success metrics |
-| System diagram | [system-diagram.md](./system-diagram.md) | What runs in the browser vs. the server vs. the model vs. external services, plus a sequence diagram of lesson generation and the approval loop |
-| Risk register | [risk-register.md](./risk-register.md) | 14 risks with likelihood, impact and mitigations |
+| Product brief | [01-product-brief.md](./01-product-brief.md) | Problem, target users, jobs-to-be-done, core AI use cases, user flows (including review/approval and fallback states), acceptance criteria, privacy risks, early state-management decisions, AI platform choice, success metrics |
+| System diagram | [02-system-boundary-diagram.md](./02-system-boundary-diagram.md) | What runs in the browser vs. the server vs. the model vs. external services, plus a sequence diagram of lesson generation and the approval loop |
+| Risk register | [03-risk-register.md](./03-risk-register.md) | 14 risks with likelihood, impact and mitigations |
 | README | this file | Overview and where to find everything |
 | Live Vercel URL | see top of this file | Deployed placeholder page |
 
 ## Where to start reviewing
 
-1. Read the one-line pitch and product principle at the top of the [product brief](./product-brief.md).
-2. Open the [system diagram](./system-diagram.md). It is the main evidence for placing browser, server, model and data responsibilities.
-3. Check the acceptance criteria (section 10 of the brief) and the [risk register](./risk-register.md).
+1. Read the one-line pitch and product principle at the top of the [product brief](./01-product-brief.md).
+2. Open the [system diagram](./02-system-boundary-diagram.md). It is the main evidence for placing browser, server, model and data responsibilities.
+3. Check the acceptance criteria (section 10 of the brief) and the [risk register](./03-risk-register.md).
 
 ## Key decisions in this phase
 

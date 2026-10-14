@@ -124,7 +124,7 @@ teachkit-app/
 - **Server Actions** start with `"use server"` and run on the server when called from the client. They are public endpoints, so they validate every input. Example: `app/actions/lessons.ts`.
 - **`server-only`** makes the build fail if a Client Component imports `lib/env.ts` or `lib/ai/provider.ts`, so secrets cannot leak into browser code by accident.
 
-Full explanation and the mapping from the product brief: [`architecture-notes.md`](../submissions/phase-1-nextjs-foundation/architecture-notes.md). Security review: [`security-checklist.md`](../submissions/phase-1-nextjs-foundation/security-checklist.md).
+Full explanation and the mapping from the product brief: [`architecture-notes.md`](../submissions/phase-1.1-nextjs-foundation/architecture-notes.md). Security review: [`security-checklist.md`](../submissions/phase-1.1-nextjs-foundation/security-checklist.md).
 
 ## AI platform and model
 
