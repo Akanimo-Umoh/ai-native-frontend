@@ -25,7 +25,7 @@ flowchart LR
   end
 
   subgraph M["MODEL LAYER"]
-    M1["LLM (Anthropic by default; provider and model subject to change)"]
+    M1["LLM (Groq free tier by default; provider and model subject to change)"]
   end
 
   subgraph D["DATA + EXTERNAL"]
