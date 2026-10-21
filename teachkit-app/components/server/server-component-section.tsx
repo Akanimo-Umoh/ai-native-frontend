@@ -1,4 +1,4 @@
-import { BoundaryStatus } from "@/components/server/boundary-status";
+import { BoundaryStatus } from "@/components/server/boundary-status"
 
 export function ServerComponentSection() {
   return (
@@ -13,5 +13,5 @@ export function ServerComponentSection() {
       </p>
       <BoundaryStatus />
     </section>
-  );
+  )
 }

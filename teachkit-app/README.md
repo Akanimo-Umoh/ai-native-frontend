@@ -5,27 +5,21 @@ The Next.js application for **TeachKit**, an AI teaching workspace that helps pr
 > **AI proposes → Teacher reviews → Teacher decides → System records.**
 
 **Live demo:** https://ai-native-frontend-teachkit-app.vercel.app/
+**Streaming assistant:** https://ai-native-frontend-teachkit-app.vercel.app/chat
 
 This app lives in the `teachkit-app/` folder of the [`ai-native-frontend`](https://github.com/Akanimo-Umoh/ai-native-frontend) repository. Planning documents and per-phase submissions are in [`../submissions/`](../submissions).
 
 ## Status
 
-**Phase 1, Next.js foundation (Weeks 2-3).** The app has:
-
-- Next.js App Router with TypeScript
-- A working demo of a Server Component, a Client Component and a Server Action
-- Shared TypeScript types for messages, tools and sources
-- Server-only, validated environment handling (the API key never reaches the browser)
-- The Vercel AI SDK (`ai`) with the Anthropic adapter installed, wired in one server-only file
-
-**No AI model is called yet.** Model calls arrive in a later module, after authentication and rate limiting exist.
+- **Phase 1:** Next.js App Router with TypeScript, a Server Component / Client Component / Server Action demo, shared types, server-only validated environment handling, the Vercel AI SDK.
+- **Phase 2 (current):** a streaming chat assistant at `/chat` with progressive rendering, stop, retry, regenerate, copy and feedback controls, distinct safety and error states, local conversation history, and keyboard and screen-reader support.
 
 ## Prerequisites
 
 - **Node.js 20.9 or newer** (`node -v`)
 - **pnpm** (`pnpm -v`). If you don't have it: `corepack enable pnpm`, or see https://pnpm.io/installation
 - **Git**
-- *Optional:* an Anthropic API key. The app runs without one; the home page then shows "Not configured".
+- *For the chat:* a free API key from Groq (https://console.groq.com/keys). No credit card is needed. The rest of the app runs without one.
 
 ## Run it on your machine
 
@@ -45,10 +39,10 @@ cp .env.example .env.local
 Copy-Item .env.example .env.local
 ```
 
-Open `.env.local` and, if you have a key, set it:
+Open `.env.local` and set your key:
 
 ```
-ANTHROPIC_API_KEY=your-key-here
+GROQ_API_KEY=your-key-here
 ```
 
 Start the dev server:
@@ -57,19 +51,22 @@ Start the dev server:
 pnpm dev
 ```
 
-Open http://localhost:3000. You should see the TeachKit page with a server-rendered status block and a lesson request form.
+Open http://localhost:3000 for the foundation page and http://localhost:3000/chat for the assistant. To try every UI state without calling the AI model, open http://localhost:3000/chat?demo=states.
 
 ## Environment variables
 
-| Variable | Required | Where it is read | Purpose |
-|---|---|---|---|
-| `ANTHROPIC_API_KEY` | No (needed once model calls exist) | Server only, via `lib/env.ts` | Authenticates with the Anthropic API |
+| Variable | Required | Purpose |
+|---|---|---|
+| `AI_PROVIDER` | No (default `groq`) | `groq` or `google` |
+| `AI_MODEL` | No | Overrides the default model for the chosen provider |
+| `GROQ_API_KEY` | When `AI_PROVIDER` is `groq` or empty | Groq API key |
+| `GOOGLE_GENERATIVE_AI_API_KEY` | When `AI_PROVIDER` is `google` | Google AI Studio key |
 
 Rules:
 
 - Never commit `.env.local` (it is git-ignored). Only `.env.example`, with empty values, is committed.
 - Never prefix a secret with `NEXT_PUBLIC_`. Those values are bundled into browser code.
-- Secrets are read in one place, `lib/env.ts`, which imports `server-only`.
+- All variables are read in one place, `lib/env.ts`, which imports `server-only`.
 
 ## Scripts
 
@@ -83,34 +80,46 @@ Rules:
 
 Run `pnpm lint`, `pnpm typecheck` and `pnpm build` before every push.
 
+## AI provider and model
+
+The project has no funding, so it uses a **free AI tier**:
+
+- **Default:** Groq, model `openai/gpt-oss-20b`.
+- **Alternate:** Google Gemini (`AI_PROVIDER=google`), default model `gemini-3.5-flash-lite`.
+
+**The provider and model are subject to change.** Free tiers have small limits, and providers retire models, so the provider and model are named in exactly one file, `lib/ai/provider.ts`. Set `AI_PROVIDER` and `AI_MODEL` to switch without touching the UI.
+
+Because the free token budget per minute is small, the chat route sends only the last few messages, caps reply length, and has per-visitor request limits (see `lib/chat/limits.ts`). When a limit is hit the chat shows a clear "too many requests" state with a retry.
+
 ## Project structure
 
 ```
 teachkit-app/
 ├── app/
 │   ├── page.tsx                      # Server Component: only renders <HomePage />
-│   ├── actions/
-│   │   └── lessons.ts                # Server Action: validates a lesson request
+│   ├── chat/page.tsx                 # Server Component: only renders <ChatPage />
+│   ├── actions/lessons.ts            # Server Action: validates a lesson request
 │   └── api/
+│       ├── chat/route.ts             # Route Handler: validates, rate-limits, streams the reply
 │       └── health/route.ts           # Route Handler: simple liveness check
 ├── components/
-│   ├── server/
-│   │   ├── home-page.tsx             # Server Component: composes the home page
-│   │   ├── home-header.tsx           # Server Component
-│   │   ├── server-component-section.tsx
-│   │   ├── client-component-section.tsx
-│   │   └── boundary-status.tsx       # Server Component: reads server env, reports status
+│   ├── server/                       # Server Components (page composition, status block)
 │   ├── client/
-│   │   └── lesson-request-form.tsx   # Client Component: form state and events
+│   │   ├── lesson-request-form.tsx   # Client Component: lesson form
+│   │   └── chat/                     # Client Components: chat panel, messages, composer, controls
 │   └── ui/                           # shadcn/ui components (generated by the shadcn CLI)
+├── hooks/
+│   └── use-chat-history.ts           # local conversation history and feedback
 ├── lib/
 │   ├── env.ts                        # server-only: validated environment access
 │   ├── ai/
-│   │   └── provider.ts               # server-only: the one place the AI model is named
-│   └── validation/
-│       └── lesson.ts                 # zod schema for the lesson request (input boundary)
+│   │   ├── provider.ts               # server-only: the one place the provider and model are named
+│   │   └── prompts.ts                # server-only: the system prompt
+│   ├── chat/                         # limits, error parsing, privacy guard, rate limit, helpers
+│   └── validation/                   # zod schemas for lesson and chat requests
 ├── types/
-│   └── index.ts                      # shared types: messages, tools, sources, lessons, quizzes
+│   ├── index.ts                      # shared domain types
+│   └── chat.ts                       # chat-specific types
 ├── .env.example                      # environment variable names (no values)
 └── next.config.ts                    # security headers
 ```
@@ -119,16 +128,12 @@ teachkit-app/
 
 ## How the server/client boundary works
 
-- **Server Components** are the default. They run only on the server and can read secrets. Example: `components/server/boundary-status.tsx`.
-- **Client Components** start with `"use client"`, run in the browser, and are used only where state or events are needed. Example: `components/client/lesson-request-form.tsx`.
-- **Server Actions** start with `"use server"` and run on the server when called from the client. They are public endpoints, so they validate every input. Example: `app/actions/lessons.ts`.
-- **`server-only`** makes the build fail if a Client Component imports `lib/env.ts` or `lib/ai/provider.ts`, so secrets cannot leak into browser code by accident.
+- **Server Components** are the default. They run only on the server and can read secrets.
+- **Client Components** start with `"use client"`, run in the browser, and are used only where state or events are needed (the forms and the chat).
+- **Server Actions** and **Route Handlers** run on the server. They are public endpoints, so they validate every input.
+- **`server-only`** makes the build fail if a Client Component imports `lib/env.ts`, `lib/ai/*` or the server chat helpers.
 
-Full explanation and the mapping from the product brief: [`architecture-notes.md`](../submissions/phase-1.1-nextjs-foundation/architecture-notes.md). Security review: [`security-checklist.md`](../submissions/phase-1.1-nextjs-foundation/security-checklist.md).
-
-## AI platform and model
-
-The app is planned against **Anthropic (Claude)** through the Vercel AI SDK. **The provider and model are subject to change.** The provider and model are named in exactly one file, `lib/ai/provider.ts`, so switching is a change there plus the adapter package, not a UI rewrite.
+Documents: [architecture notes](../submissions/phase-1-nextjs-foundation/architecture-notes.md), [security checklist](../submissions/phase-1-nextjs-foundation/security-checklist.md), [interaction controls](../submissions/phase-2-streaming-chat/interaction-controls.md), [accessibility evidence](../submissions/phase-2-streaming-chat/accessibility-evidence.md).
 
 ## Deployment
 
@@ -136,7 +141,7 @@ The repository is connected to Vercel:
 
 - **Root Directory:** `teachkit-app`
 - **Framework Preset:** Next.js
-- **Environment variable:** `ANTHROPIC_API_KEY`, set in Vercel under Project Settings → Environment Variables (never in the repo)
+- **Environment variables:** `GROQ_API_KEY` (and optionally `AI_PROVIDER`, `AI_MODEL`), set in Vercel under Project Settings → Environment Variables. Never put them in the repo.
 
 Every push to `main` deploys automatically.
 
@@ -145,12 +150,14 @@ Every push to `main` deploys automatically.
 | Problem | Fix |
 |---|---|
 | `pnpm: command not found` | Run `corepack enable pnpm`, or install pnpm from https://pnpm.io/installation |
-| Home page says "Not configured" | Add `ANTHROPIC_API_KEY` to `.env.local` and restart `pnpm dev` |
-| `Invalid server environment: ANTHROPIC_API_KEY is required` | A server module tried to use the key and it is not set. Add it to `.env.local` |
+| Home page says "Not configured" | Add `GROQ_API_KEY` to `.env.local` and restart `pnpm dev` |
+| Chat says "The assistant is not available right now" | The key for the selected provider is missing or invalid. Check `.env.local` and the server log |
+| Chat says "too many requests" or "the AI service is busy" | A free-tier limit was reached. Wait for the retry time shown, or try again later |
+| Model not found or decommissioned | Providers retire models. Pick a current one from the provider's model list and set `AI_MODEL` |
 | Build error mentioning `server-only` | A Client Component imported a server-only module. Move that code to a Server Component, Server Action or Route Handler |
 | Port 3000 already in use | Run `pnpm dev -p 3001` |
 | Changes to `.env.local` not picked up | Stop and restart `pnpm dev` |
 
 ## Commit convention
 
-Conventional Commits: `<type>(<scope>): <subject>`, imperative, lowercase, no full stop, 72 characters or fewer. Example: `feat(app): add lesson request server action`.
+Conventional Commits: `<type>(<scope>): <subject>`, imperative, lowercase, no full stop, 72 characters or fewer. Example: `feat(app): add chat history hook`.

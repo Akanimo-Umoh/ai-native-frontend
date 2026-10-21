@@ -1,6 +1,7 @@
-import { ClientComponentSection } from "@/components/server/client-component-section";
-import { HomeHeader } from "@/components/server/home-header";
-import { ServerComponentSection } from "@/components/server/server-component-section";
+import { ChatCallout } from "@/components/server/chat-callout"
+import { ClientComponentSection } from "@/components/server/client-component-section"
+import { HomeHeader } from "@/components/server/home-header"
+import { ServerComponentSection } from "@/components/server/server-component-section"
 
 export function HomePage() {
   return (
@@ -8,6 +9,7 @@ export function HomePage() {
       <HomeHeader />
       <ServerComponentSection />
       <ClientComponentSection />
+      <ChatCallout />
     </main>
-  );
+  )
 }

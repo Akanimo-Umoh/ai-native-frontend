@@ -10,7 +10,7 @@ If I swap provider or model tomorrow, one thing changes: `lib/ai/provider.ts`, w
 
 ## Where this shows up in the repo
 
-- `teachkit-app/lib/ai/provider.ts` is the one file that names the provider and model.
+- The provider and model are named in one file: `teachkit-app/lib/ai/provider.ts`
 - It imports `server-only`, so it cannot be pulled into browser code.
 - The key is read through `teachkit-app/lib/env.ts`, on the server only.
-- The `ai` package and the `@ai-sdk/anthropic` adapter are installed in `teachkit-app/package.json`.
+- The `ai` package and the `@ai-sdk/groq` adapter are installed in `teachkit-app/package.json`.

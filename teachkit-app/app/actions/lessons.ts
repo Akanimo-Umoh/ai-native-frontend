@@ -1,10 +1,16 @@
-"use server";
+"use server"
 
-import { lessonRequestSchema } from "@/lib/validation/lesson";
-import type { LessonFormState } from "@/types";
+import { lessonRequestSchema } from "@/lib/validation/lesson"
+import type { LessonFormState } from "@/types"
 
 // Only these fields are ever read from the submitted form. Anything else is ignored.
-const FIELDS = ["classLevel", "subject", "topic", "durationMinutes", "notes"] as const;
+const FIELDS = [
+  "classLevel",
+  "subject",
+  "topic",
+  "durationMinutes",
+  "notes",
+] as const
 
 /**
  * Server Action: validates a lesson request on the server.
@@ -19,21 +25,21 @@ const FIELDS = ["classLevel", "subject", "topic", "durationMinutes", "notes"] as
  */
 export async function submitLessonRequest(
   _previous: LessonFormState,
-  formData: FormData,
+  formData: FormData
 ): Promise<LessonFormState> {
-  const raw: Record<string, string> = {};
+  const raw: Record<string, string> = {}
   for (const field of FIELDS) {
-    const value = formData.get(field);
-    raw[field] = typeof value === "string" ? value : "";
+    const value = formData.get(field)
+    raw[field] = typeof value === "string" ? value : ""
   }
 
-  const parsed = lessonRequestSchema.safeParse(raw);
+  const parsed = lessonRequestSchema.safeParse(raw)
 
   if (!parsed.success) {
-    const fieldErrors: Record<string, string> = {};
+    const fieldErrors: Record<string, string> = {}
     for (const issue of parsed.error.issues) {
-      const key = String(issue.path[0] ?? "form");
-      fieldErrors[key] ??= issue.message;
+      const key = String(issue.path[0] ?? "form")
+      fieldErrors[key] ??= issue.message
     }
 
     return {
@@ -46,8 +52,8 @@ export async function submitLessonRequest(
         },
       },
       values: raw,
-    };
+    }
   }
 
-  return { result: { ok: true, data: parsed.data }, values: raw };
+  return { result: { ok: true, data: parsed.data }, values: raw }
 }

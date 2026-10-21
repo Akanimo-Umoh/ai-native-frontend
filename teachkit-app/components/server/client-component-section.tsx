@@ -1,4 +1,4 @@
-import { LessonRequestForm } from "@/components/client/lesson-request-form";
+import { LessonRequestForm } from "@/components/client/lesson-request-form"
 
 export function ClientComponentSection() {
   return (
@@ -8,10 +8,10 @@ export function ClientComponentSection() {
       </h2>
       <p className="text-sm text-muted-foreground">
         The form is a Client Component (it has state and handles events). On
-        submit it calls a Server Action, which validates the input on the
-        server and returns a typed result.
+        submit it calls a Server Action, which validates the input on the server
+        and returns a typed result.
       </p>
       <LessonRequestForm />
     </section>
-  );
+  )
 }

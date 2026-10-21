@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from "next/server"
 
 /**
  * Route Handler: a plain HTTP endpoint that runs on the server.
@@ -6,5 +6,5 @@ import { NextResponse } from "next/server";
  * Streaming model responses will use this same mechanism in a later module.
  */
 export function GET() {
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true })
 }

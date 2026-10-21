@@ -1,6 +1,6 @@
-import { connection } from "next/server";
-import { isAiConfigured } from "@/lib/env";
-import { MODEL_ID } from "@/lib/ai/provider";
+import { connection } from "next/server"
+import { getModelInfo } from "@/lib/ai/provider"
+import { isAiConfigured } from "@/lib/env"
 
 /**
  * Server Component: runs only on the server and ships no JavaScript for itself.
@@ -8,10 +8,11 @@ import { MODEL_ID } from "@/lib/ai/provider";
  */
 export async function BoundaryStatus() {
   // Render per request so the status reflects the live environment, not build time.
-  await connection();
+  await connection()
 
-  const configured = isAiConfigured();
-  const renderedAt = new Date().toISOString();
+  const configured = isAiConfigured()
+  const { provider, model } = getModelInfo()
+  const renderedAt = new Date().toISOString()
 
   return (
     <dl className="grid gap-4 rounded-lg border bg-card p-4 text-sm text-card-foreground sm:grid-cols-3">
@@ -22,13 +23,15 @@ export async function BoundaryStatus() {
         </dd>
       </div>
       <div className="space-y-1">
-        <dt className="text-muted-foreground">Planned model</dt>
-        <dd className="font-medium">{MODEL_ID} (subject to change)</dd>
+        <dt className="text-muted-foreground">Provider and model</dt>
+        <dd className="font-medium">
+          {provider} / {model} (subject to change)
+        </dd>
       </div>
       <div className="space-y-1">
         <dt className="text-muted-foreground">Rendered</dt>
         <dd className="font-medium">On the server at {renderedAt}</dd>
       </div>
     </dl>
-  );
+  )
 }

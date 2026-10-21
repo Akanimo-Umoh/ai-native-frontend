@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { CLASS_LEVELS } from "@/types";
+import { z } from "zod"
+import { CLASS_LEVELS } from "@/types"
 
 /**
  * Input boundary for a lesson request.
@@ -29,4 +29,4 @@ export const lessonRequestSchema = z.object({
     .max(500, "Keep notes under 500 characters")
     .optional()
     .transform((value) => value || undefined),
-});
+})

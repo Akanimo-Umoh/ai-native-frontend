@@ -10,18 +10,20 @@ An AI teaching workspace that helps private-school teachers prepare lessons, gen
 
 ## Status
 
-Phase 1, Week 1: product strategy and frontend architecture. This repo currently contains planning documents; the app is built up phase by phase.
+Phase 1 (product strategy and the Next.js foundation) is complete. Phase 2 (Week 4) adds a streaming chat assistant with stop, retry, regenerate, copy and feedback controls, safety and error states, and accessibility evidence.
 
-The application will live in [`teachkit-app/`](./teachkit-app). Each phase's documents are in its own folder under [`submissions/`](./submissions).
+The application lives in [`teachkit-app/`](./teachkit-app). Each phase's documents are in their own folder under [`submissions/`](./submissions).
 
 ## Repository structure
 
 ```
 ai-native-frontend/
-├── README.md                          # project overview (this file)
-├── submissions/                       # one folder per phase submission
-│   └── phase-1-product-strategy/      # Phase 1 documents
-└── teachkit-app/                      # the application (built from Weeks 2-3)
+├── README.md                              # project overview (this file)
+├── submissions/                           # one folder per phase submission
+│   ├── phase-1-product-strategy/          # product brief, system diagram, risk register
+│   ├── phase-1-nextjs-foundation/         # architecture notes, security checklist, AI SDK note
+│   └── phase-2-streaming-chat/            # interaction controls, accessibility evidence
+└── teachkit-app/                          # the Next.js application
 ```
 
 ## Phases
@@ -29,16 +31,35 @@ ai-native-frontend/
 | Phase | Folder | Focus |
 |---|---|---|
 | Phase 1: AI-Native Product Strategy & Frontend Architecture | [phase-1-product-strategy](./submissions/phase-1-product-strategy) | Product brief, system diagram, risk register, README, live URL |
+| Phase 1: Next.js App Router, Server/Client Boundaries, and TypeScript | [phase-1-nextjs-foundation](./submissions/phase-1-nextjs-foundation) | Next.js app, architecture notes, security checklist, live URL |
+| Phase 2: Streaming Chat UX and Conversational Interfaces | [phase-2-streaming-chat](./submissions/phase-2-streaming-chat) | Streaming chat, interaction controls, accessibility evidence, live URL |
 
 More phases are added to this table as they are completed.
 
-## Phase 1 documents
+## Documents
+
+**Product strategy**
 
 | Document | Description |
 |---|---|
 | [Product brief](./submissions/phase-1-product-strategy/01-product-brief.md) | Problem, users, jobs-to-be-done, AI use cases, flows, acceptance criteria, privacy, state decisions |
 | [System diagram](./submissions/phase-1-product-strategy/02-system-boundary-diagram.md) | Browser / server / model / external boundaries, sequence and approval-loop diagrams |
 | [Risk register](./submissions/phase-1-product-strategy/03-risk-register.md) | Risks, likelihood, impact and mitigations |
+
+**Next.js foundation**
+
+| Document | Description |
+|---|---|
+| [Architecture notes](./submissions/phase-1-nextjs-foundation/architecture-notes.md) | Server vs client mapping of the product brief, boundary mechanisms, decisions |
+| [Security checklist](./submissions/phase-1-nextjs-foundation/security-checklist.md) | Secret handling and input boundaries, with how each item is verified |
+| [AI SDK boundary note](./submissions/phase-1-nextjs-foundation/ai-sdk-boundary-note.md) | Why the AI SDK sits between the AI platform and the UI |
+
+**Streaming chat**
+
+| Document | Description |
+|---|---|
+| [Interaction controls](./submissions/phase-2-streaming-chat/interaction-controls.md) | Every control and state (loading, stop, retry, regenerate, copy, feedback, errors, safety) and how to test each |
+| [Accessibility evidence](./submissions/phase-2-streaming-chat/accessibility-evidence.md) | Keyboard, focus and screen-reader design, with the test plan and results |
 
 ## What TeachKit does
 
@@ -59,30 +80,34 @@ See the [system diagram](./submissions/phase-1-product-strategy/02-system-bounda
 
 ## Tech stack
 
-- Next.js (App Router), TypeScript, Tailwind CSS
-- Vercel AI SDK
+- Next.js (App Router), TypeScript, Tailwind CSS, shadcn/ui
+- Vercel AI SDK (Groq by default, Google Gemini as the alternate; both free tiers)
+- pnpm
 - Deployed on Vercel
 
 ### AI platform and model
 
-TeachKit is currently planned against **Anthropic (Claude)**. **The provider and model are subject to change.** The choice is swappable because all model calls go through the Vercel AI SDK on the server, so the frontend code stays the same whichever provider or model is used. Switching is a configuration change, not a UI rewrite.
+The project has no funding, so TeachKit runs on a **free AI tier**: **Groq** by default (model `openai/gpt-oss-20b`), with **Google Gemini** as an alternate provider. **The provider and model are subject to change.** The choice is swappable because all model calls go through the Vercel AI SDK on the server, so the frontend code stays the same whichever provider or model is used. This project already made one such switch (from a paid provider to a free one) by editing a single server file.
 
 ## Getting started
-
-_Coming in Phase 1, Weeks 2-3, when the application is scaffolded._
 
 ```bash
 git clone https://github.com/Akanimo-Umoh/ai-native-frontend.git
 cd ai-native-frontend/teachkit-app
-npm install
-cp .env.example .env.local   # add your provider key
-npm run dev
+pnpm install
+cp .env.example .env.local   # Windows PowerShell: Copy-Item .env.example .env.local
+pnpm dev
 ```
+
+Then open http://localhost:3000. The app runs without an API key; the chat at /chat needs one (see the app README). Full instructions, environment variables and troubleshooting are in [`teachkit-app/README.md`](./teachkit-app/README.md).
 
 Environment variables (server-only, never prefixed with `NEXT_PUBLIC_`):
 
 ```
-ANTHROPIC_API_KEY=
+AI_PROVIDER=
+AI_MODEL=
+GROQ_API_KEY=
+GOOGLE_GENERATIVE_AI_API_KEY=
 ```
 
 ## Deployment

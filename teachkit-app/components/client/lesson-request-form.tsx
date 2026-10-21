@@ -1,10 +1,10 @@
-"use client";
+"use client"
 
-import { useActionState } from "react";
-import type { ReactNode } from "react";
-import { submitLessonRequest } from "@/app/actions/lessons";
-import { CLASS_LEVELS, CLASS_LEVEL_LABELS } from "@/types";
-import type { LessonFormState } from "@/types";
+import { useActionState } from "react"
+import type { ReactNode } from "react"
+import { submitLessonRequest } from "@/app/actions/lessons"
+import { CLASS_LEVELS, CLASS_LEVEL_LABELS } from "@/types"
+import type { LessonFormState } from "@/types"
 
 /**
  * Client Component: it needs state (pending, submitted values) and event handling,
@@ -12,14 +12,16 @@ import type { LessonFormState } from "@/types";
  * secrets; it hands the form to a Server Action and renders the typed result.
  */
 
-const initialState: LessonFormState = { result: null, values: {} };
+const initialState: LessonFormState = { result: null, values: {} }
 
 const controlClass =
-  "w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring aria-invalid:border-destructive";
+  "w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring aria-invalid:border-destructive"
 
 function describedBy(id: string, error?: string, hint?: boolean) {
-  const ids = [hint ? `${id}-hint` : null, error ? `${id}-error` : null].filter(Boolean);
-  return ids.length ? ids.join(" ") : undefined;
+  const ids = [hint ? `${id}-hint` : null, error ? `${id}-error` : null].filter(
+    Boolean
+  )
+  return ids.length ? ids.join(" ") : undefined
 }
 
 function Field({
@@ -29,11 +31,11 @@ function Field({
   hint,
   children,
 }: {
-  id: string;
-  label: string;
-  error?: string;
-  hint?: string;
-  children: ReactNode;
+  id: string
+  label: string
+  error?: string
+  hint?: string
+  children: ReactNode
 }) {
   return (
     <div className="space-y-1.5">
@@ -52,19 +54,19 @@ function Field({
         </p>
       ) : null}
     </div>
-  );
+  )
 }
 
 export function LessonRequestForm() {
   const [state, formAction, pending] = useActionState(
     submitLessonRequest,
-    initialState,
-  );
+    initialState
+  )
 
-  const failure = state.result && !state.result.ok ? state.result.error : null;
-  const success = state.result && state.result.ok ? state.result.data : null;
-  const errors = failure?.fieldErrors ?? {};
-  const values = state.values;
+  const failure = state.result && !state.result.ok ? state.result.error : null
+  const success = state.result && state.result.ok ? state.result.data : null
+  const errors = failure?.fieldErrors ?? {}
+  const values = state.values
 
   return (
     // noValidate: the server is the source of truth, so its messages are shown consistently.
@@ -144,7 +146,11 @@ export function LessonRequestForm() {
           inputMode="numeric"
           defaultValue={values.durationMinutes ?? "40"}
           aria-invalid={Boolean(errors.durationMinutes)}
-          aria-describedby={describedBy("durationMinutes", errors.durationMinutes, true)}
+          aria-describedby={describedBy(
+            "durationMinutes",
+            errors.durationMinutes,
+            true
+          )}
           className={controlClass}
         />
       </Field>
@@ -174,8 +180,8 @@ export function LessonRequestForm() {
           <div className="space-y-2 rounded-md border bg-muted px-3 py-3 text-sm">
             <p className="font-medium">Request accepted by the server.</p>
             <p className="text-muted-foreground">
-              No AI model is called in this phase. In a later module, a valid
-              request starts a draft lesson for the teacher to review.
+              This form only checks the request. The streaming assistant is on
+              the chat page.
             </p>
             <pre className="overflow-x-auto text-xs">
               {JSON.stringify(success, null, 2)}
@@ -184,5 +190,5 @@ export function LessonRequestForm() {
         ) : null}
       </div>
     </form>
-  );
+  )
 }
