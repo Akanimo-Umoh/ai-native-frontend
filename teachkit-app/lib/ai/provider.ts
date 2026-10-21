@@ -1,20 +1,42 @@
-import "server-only";
-import { anthropic } from "@ai-sdk/anthropic";
-import { getServerEnv } from "@/lib/env";
+import "server-only"
+import { google } from "@ai-sdk/google"
+import { groq } from "@ai-sdk/groq"
+import { getAiSelection, getServerEnv } from "@/lib/env"
+import type { AiProviderName } from "@/lib/env"
 
 /**
  * The single place where the AI platform and model are named.
- * Provider and model are subject to change: switching means editing this file
- * (and its adapter package), not the UI code that consumes the result.
+ * The provider and model are subject to change: switching means editing this
+ * file (or setting AI_PROVIDER / AI_MODEL), not the UI code that consumes it.
  *
- * Nothing here calls the model. Real model calls arrive in a later module,
- * after auth and rate limiting exist.
+ * Free-tier choice: Groq is the default; Google Gemini is the alternate.
+ * Model IDs change over time. Check the provider's model list before changing them.
  */
-export const MODEL_ID = "claude-sonnet-5-5";
+export const DEFAULT_MODELS: Record<AiProviderName, string> = {
+  groq: "openai/gpt-oss-20b",
+  google: "gemini-3.5-flash-lite",
+}
 
+/** Never throws. Safe to show in the UI. */
+export function getModelInfo() {
+  const { provider, model } = getAiSelection()
+  return { provider, model: model ?? DEFAULT_MODELS[provider] }
+}
+
+/** Returns the configured model. Throws a clear error if the provider's key is missing. */
 export function getModel() {
-  // Fail fast with a clear message if the key is missing.
-  getServerEnv();
-  // The default `anthropic` instance reads ANTHROPIC_API_KEY from the server environment.
-  return anthropic(MODEL_ID);
+  getServerEnv()
+  const { provider, model } = getModelInfo()
+  // The default provider instances read GROQ_API_KEY / GOOGLE_GENERATIVE_AI_API_KEY themselves.
+  return provider === "google" ? google(model) : groq(model)
+}
+
+/** Keeps Groq's reasoning models brief, which saves tokens and speeds up the first visible text. */
+export function getProviderOptions():
+  Record<string, Record<string, string>> | undefined {
+  const { provider, model } = getModelInfo()
+  if (provider === "groq" && model.startsWith("openai/gpt-oss")) {
+    return { groq: { reasoningEffort: "low" } }
+  }
+  return undefined
 }
