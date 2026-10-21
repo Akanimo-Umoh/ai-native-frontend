@@ -8,8 +8,8 @@ export function HomeHeader() {
       <p className="text-muted-foreground">
         An AI teaching workspace for private-school teachers. The AI proposes,
         the teacher decides. This page demonstrates the server/client boundary;
-        no AI model is called yet.
+        the streaming assistant lives on its own page.
       </p>
     </header>
-  );
+  )
 }
