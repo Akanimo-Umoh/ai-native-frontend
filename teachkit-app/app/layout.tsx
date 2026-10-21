@@ -4,6 +4,15 @@ import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: {
+    default: "TeachKit",
+    template: "%s | TeachKit",
+  },
+  description: "An AI teaching workspace for private-school teachers.",
+}
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 
