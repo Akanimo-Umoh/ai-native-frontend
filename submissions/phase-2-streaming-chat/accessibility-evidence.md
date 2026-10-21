@@ -45,7 +45,7 @@ Fill in **Result** (Pass / Fail / Partial), the date, and notes after running ea
 
 | ID | Test | How | Result | Notes |
 |---|---|---|---|---|
-| A1 | Lighthouse accessibility score | Chrome DevTools → Lighthouse → Accessibility, on `/chat` (desktop and mobile). Save as `evidence/lighthouse-chat.png` | | |
+| A1 | Lighthouse accessibility score | Chrome DevTools → Lighthouse → Accessibility and Performance, on the live `/chat` page in Incognito (Mobile: Moto G Power emulation, and Desktop) | Accessibility 100 on both Mobile and Desktop. Performance: Desktop 100, Mobile 79. Before the fix: Accessibility 96. | Run on 2026-10-22. The first run flagged "Document doesn't have a title" (WCAG 2.4.2); fixed by adding page metadata in `teachkit-app/app/layout.tsx`. Mobile Performance varied between runs (79 to 89), which is normal for free hosting and a simulated slow phone. Lighthouse also lists manual checks it cannot judge; those are covered by tests K1, K2 and S1 to S6. Screenshots: `evidence/lighthouse-chat-mobile-before.png`, `lighthouse-chat-mobile.png`, `lighthouse-chat-desktop.png`. |
 | A2 | axe DevTools scan | Run the axe DevTools extension on `/chat` in the empty state and after a reply. Save as `evidence/axe-chat.png` | | |
 
 ### Keyboard only (no mouse)
