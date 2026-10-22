@@ -13,6 +13,7 @@ Target: WCAG 2.2 level AA for the chat interface (`/chat`). Paths are relative t
 | Conversation region | `role="log"` with `aria-live="off"` and `aria-busy` while streaming, so users read it on demand; focusable (`tabIndex=0`) so keyboard users can scroll it | `chat-message-list.tsx` |
 | Message identity | Each message is an `article` labelled "Your message" or "Assistant message" | `chat-message.tsx` |
 | Keyboard | Enter sends, Shift+Enter adds a line, Escape stops, every control is a real button in a logical Tab order | `chat-composer.tsx`, `chat-panel.tsx` |
+| Initial focus | On mouse-and-keyboard devices the message box is focused on load (without scrolling); on touch devices it isn't, so the on-screen keyboard doesn't open | `chat-panel.tsx` |
 | Focus | Focus stays in the message box while sending and returns there when an action removes the focused control | `chat-panel.tsx` |
 | Labels | The message box has a visible label and a description (shortcuts, privacy note, character count); feedback buttons expose `aria-pressed`; groups have names | `chat-composer.tsx`, `message-actions.tsx` |
 | Form errors | Blocked messages explain the problem and offer "Edit message" | `chat-safety-notice.tsx` |
@@ -54,6 +55,7 @@ Fill in **Result** (Pass / Fail / Partial), the date, and notes after running ea
 |---|---|---|---|---|---|
 | K1 | Full keyboard run | Tab through the page; send with Enter; stop with Escape; reach Copy, Regenerate, Helpful, Not helpful and Clear with Tab and activate each with Enter or Space | Every control reachable and operable; focus ring always visible; no trap | | |
 | K2 | Focus after actions | Press Stop, Retry, Edit message and Clear | Focus lands in the message box each time and is never lost | | |
+| K3 | Initial focus | Reload the page on desktop | The cursor blinks in the message box and the page doesn't scroll. On a phone-size device-mode view with touch: no keyboard opens | | |
 
 Record a short screen recording of K1 and K2 as `evidence/keyboard-walkthrough.mp4` (or `.gif`).
 

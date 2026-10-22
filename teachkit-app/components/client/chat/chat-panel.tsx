@@ -2,7 +2,7 @@
 
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import type { KeyboardEvent } from "react"
 import { ChatComposer } from "@/components/client/chat/chat-composer"
 import { ChatErrorMessage } from "@/components/client/chat/chat-error-message"
@@ -29,6 +29,7 @@ type Props = {
  * Focus rules (keyboard users):
  * - Focus stays in the message box while sending.
  * - When an action removes the control that had focus (Stop, Retry, Edit, Clear),
+ * - On mouse-and-keyboard devices, focus starts in the message box on load.
  *   focus returns to the message box so it is never lost.
  * - Controls never steal focus when a response arrives.
  */
@@ -54,6 +55,13 @@ export function ChatPanel({ showSimulator }: Props) {
   const [wasStopped, setWasStopped] = useState(false)
   const [errorDismissed, setErrorDismissed] = useState(false)
   const inputRef = useRef<HTMLTextAreaElement>(null)
+
+  // On devices with a mouse and keyboard, start with the cursor in the message box, like other chat apps. Skipped on touch devices so the on-screen keyboard does not open on load. preventScroll stops the page jumping down to the box.
+  useEffect(() => {
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      inputRef.current?.focus({ preventScroll: true })
+    }
+  }, [])
 
   const busy = status === "submitted" || status === "streaming"
   const errorInfo =

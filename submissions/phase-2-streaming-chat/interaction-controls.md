@@ -42,6 +42,7 @@ The route sends errors as JSON, `{ "error": { "code", "message", "retryAfterSeco
 
 ## 4. Focus rules
 
+- On load, focus starts in the message box on devices with a mouse. On touch devices focus isn't moved.
 - Focus stays in the message box while sending.
 - When an action removes the control that had focus (Stop, Retry, Edit message, Clear), focus returns to the message box, so it is never lost.
 - Controls never take focus when a response arrives.
