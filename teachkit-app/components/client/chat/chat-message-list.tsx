@@ -66,7 +66,7 @@ export function ChatMessageList({
       aria-busy={busy}
       tabIndex={0}
       onScroll={handleScroll}
-      className="max-h-[60vh] min-h-[16rem] flex-1 space-y-4 overflow-y-auto p-4 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+      className=" min-h-[10rem] flex-1 space-y-4 overflow-y-auto p-4 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
     >
       {messages.length === 0 && !busy ? (
         <ChatEmptyState onStarter={onStarter} />
