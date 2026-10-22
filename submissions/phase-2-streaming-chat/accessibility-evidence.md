@@ -78,7 +78,7 @@ Save your notes as `evidence/nvda-notes.md` (a few lines per test is enough).
 
 | ID | Test | How | Expected | Result | Notes |
 |---|---|---|---|---|---|
-| V1 | Zoom and reflow | Browser zoom to 200%, and a 320px wide window | No horizontal scrolling for the chat; nothing is cut off | | |
+| V1 | Zoom and reflow | Browser zoom to 200%, and a 320px wide window | No horizontal scrolling for the chat; nothing is cut off | | The chat fills the screen height with an internal scroll area (the message box stays at the bottom); at very small sizes the page scrolls instead. |
 | V2 | Touch targets | Inspect buttons on a phone-width view | All controls easy to tap | | |
 | V3 | Reduced motion | Turn on "reduce motion" in the operating system, send a message | The thinking indicator does not pulse | | |
 
