@@ -27,9 +27,9 @@ type Props = {
  * Owns the chat: wires useChat to the message list, composer and controls.
  *
  * Focus rules (keyboard users):
+ * - On mouse-and-keyboard devices, focus starts in the message box on load.
  * - Focus stays in the message box while sending.
  * - When an action removes the control that had focus (Stop, Retry, Edit, Clear),
- * - On mouse-and-keyboard devices, focus starts in the message box on load.
  *   focus returns to the message box so it is never lost.
  * - Controls never steal focus when a response arrives.
  */
@@ -200,9 +200,9 @@ export function ChatPanel({ showSimulator }: Props) {
     <section
       aria-label="TeachKit Assistant chat"
       onKeyDown={handleKeyDown}
-      className="flex flex-col rounded-lg border bg-card text-card-foreground"
+      className="flex min-h-0 flex-1 flex-col rounded-lg border bg-card text-card-foreground"
     >
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b px-4 py-3">
+      <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-b px-4 py-3">
         <p className="text-xs text-muted-foreground">
           AI drafts for teacher review. History is saved on this device only.
         </p>
@@ -229,7 +229,7 @@ export function ChatPanel({ showSimulator }: Props) {
         {renderError()}
       </ChatMessageList>
 
-      <div className="space-y-3 border-t p-4">
+      <div className="shrink-0 space-y-3 border-t p-4">
         {showSimulator ? (
           <ChatStateSimulator onSimulate={handleSimulate} disabled={busy} />
         ) : null}

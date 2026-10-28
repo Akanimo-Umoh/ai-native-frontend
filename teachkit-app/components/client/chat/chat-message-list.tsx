@@ -24,7 +24,8 @@ type Props = {
  * - role="log" with aria-live="off": screen reader users read it on demand and hear
  *   short status updates from the separate live region instead of every token.
  * - tabIndex=0 so keyboard users can scroll it.
- * - Auto-scrolls to the newest text unless the reader has scrolled up.
+ * - Scrolls inside its own box (the page itself does not scroll), and follows the
+ *   newest text unless the reader has scrolled up.
  */
 export function ChatMessageList({
   messages,
@@ -37,7 +38,7 @@ export function ChatMessageList({
   onStarter,
   children,
 }: Props) {
-  const endRef = useRef<HTMLDivElement>(null)
+  const listRef = useRef<HTMLDivElement>(null)
   const stickToBottom = useRef(true)
   const busy = status === "submitted" || status === "streaming"
 
@@ -47,10 +48,11 @@ export function ChatMessageList({
     .find((message) => message.role === "assistant")
 
   useEffect(() => {
-    if (stickToBottom.current) {
-      endRef.current?.scrollIntoView({ block: "end" })
+    const element = listRef.current
+    if (element && stickToBottom.current) {
+      element.scrollTop = element.scrollHeight
     }
-  }, [messages, status])
+  }, [messages, status, children])
 
   function handleScroll(event: UIEvent<HTMLDivElement>) {
     const element = event.currentTarget
@@ -60,13 +62,14 @@ export function ChatMessageList({
 
   return (
     <div
+      ref={listRef}
       role="log"
       aria-label="Conversation"
       aria-live="off"
       aria-busy={busy}
       tabIndex={0}
       onScroll={handleScroll}
-      className=" min-h-[10rem] flex-1 space-y-4 overflow-y-auto p-4 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+      className="min-h-[10rem] flex-1 space-y-4 overflow-y-auto p-4 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
     >
       {messages.length === 0 && !busy ? (
         <ChatEmptyState onStarter={onStarter} />
@@ -96,7 +99,6 @@ export function ChatMessageList({
       ) : null}
 
       {children}
-      <div ref={endRef} />
     </div>
   )
 }
